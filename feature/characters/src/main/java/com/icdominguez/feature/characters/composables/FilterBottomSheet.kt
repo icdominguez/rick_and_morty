@@ -39,7 +39,7 @@ fun FilterBottomSheet(
     filterGenderValues: List<CharactersScreenViewModel.FilterGender>,
     onFilterStatusSelected: (String) -> Unit,
     onFilterGenderSelected: (String) -> Unit,
-    onResetFilterButtonClicked: () -> Unit
+    onResetFilterButtonClicked: () -> Unit,
 ) {
     val cardShape = RoundedCornerShape(size = 10.dp)
 
@@ -144,7 +144,7 @@ fun FilterBottomSheet(
                                     .height(60.dp),
                                 imageVector = filterGender.imageVector,
                                 contentDescription = "",
-                                colorFilter = if (filterGender.selected) ColorFilter.tint(MaterialTheme.colorScheme.primary) else null,
+                                colorFilter = if (filterGender.selected) ColorFilter.tint(MaterialTheme.colorScheme.primary) else ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
                             )
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
@@ -167,12 +167,12 @@ fun FilterBottomSheet(
                 horizontalArrangement = Arrangement.SpaceAround,
             ) {
                 TextButton(
-                    onClick = onApplyClicked
+                    onClick = onApplyClicked,
                 ) {
                     Text(text = "Apply")
                 }
                 TextButton(
-                    onClick = onResetFilterButtonClicked
+                    onClick = onResetFilterButtonClicked,
                 ) {
                     Text(text = "Reset filter")
                 }
