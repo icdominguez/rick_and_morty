@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Rick_and_morty" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Rick_and_morty.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/rick_and_morty</item>
+        <item name="postSplashScreenTheme">@style/Theme.Rick_and_morty</item>
+    </style>
+
+</resources>
