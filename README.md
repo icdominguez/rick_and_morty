@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# rick_and_morty
-=======
 # Rick and morty APP
 
 This is an app build using Kotlin that consumes [Rick and Morty API] (https://rickandmortyapi.com) to display a gallery of characters, locations and episodes. 
@@ -24,15 +21,22 @@ These are the app screenshots and video:
 
 <h5> Note: The App is still in progress and only the characters module is fully done</h5>
 
+<table align="center">
+	<tr>
+		<td><img src="https://github.com/icordondominguez/rick_and_morty/assets/56835908/ea4dc591-7d0e-4e15-b911-d96077ee3abd" width="350" title="hover text"></td>
+		<td><img src="https://github.com/icordondominguez/rick_and_morty/assets/56835908/8e8e4545-18cd-4882-8fe3-5e29fc86873b" width="350" title="hover text"></td>
+	</tr>
+	<tr>
+		<td><img src="https://github.com/icordondominguez/rick_and_morty/assets/56835908/9be493a5-4a7f-492d-8ef3-17fbe906c2cf" width="350" title="hover text"></td>
+		<td><img src="https://github.com/icordondominguez/rick_and_morty/assets/56835908/ca5b8dea-9305-4bcc-b8d5-cecff0255a12" width="350" title="hover text"></td>
+	</tr>
+  <tr>
+  	<td><img src="https://github.com/icordondominguez/rick_and_morty/assets/56835908/c3b0ed4c-a27f-4bab-b9b8-edfbfe75ea89" width="350" title="hover text"></td>
+  	<td><img src="https://github.com/icordondominguez/rick_and_morty/assets/56835908/4347eb6a-ab7b-46a5-9e2a-100f73373402" width="350" title="hover text"></td>
+  </tr>
+</table>
 
-![Screenshot_1](https://github.com/icordondominguez/rick_and_morty/assets/56835908/757c387e-9ff7-40eb-ac11-f32a8a3bb77f)
-![Screenshot_2](https://github.com/icordondominguez/rick_and_morty/assets/56835908/47991bfa-cede-4dca-818f-103e0150f09d)
-![Screenshot_3](https://github.com/icordondominguez/rick_and_morty/assets/56835908/9a35307a-2497-4779-a1d4-90243ac7c198)
-![Screenshot_4](https://github.com/icordondominguez/rick_and_morty/assets/56835908/a1b22c28-7445-4549-a241-34eabe9f88a8)
-![Screenshot_5](https://github.com/icordondominguez/rick_and_morty/assets/56835908/a65de430-b5ad-44e5-b98a-ae31c862aae2)
-
-https://github.com/icordondominguez/rick_and_morty/assets/56835908/793b86b3-7227-4257-9f72-e7b955a3c63c
-
+[Screen_recording_20230914_164932.webm](https://github.com/icordondominguez/rick_and_morty/assets/56835908/d9eea4fe-1a02-42f4-b2bb-9979b3b96a4b)
 
 ## Prerequisite
 <p>In order to be able to build the application you'll need Android Studio Minimum version Android Studio Giraffe May Build</p>
@@ -98,6 +102,3 @@ kotlinx.coroutines.
 
 1. [Now in android repository](https://github.com/android/nowinandroid)
 2. [Guide to Android app modularization](https://www.youtube.com/watch?v=16SwTvzDO0A&ab_channel=AndroidDevelopers)
-
-
->>>>>>> origin/master
