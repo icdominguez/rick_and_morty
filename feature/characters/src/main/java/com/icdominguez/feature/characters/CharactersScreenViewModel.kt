@@ -14,10 +14,8 @@ import com.icdominguez.core.model.Character
 import com.icdominguez.domain.characters.GetAllCharacterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,7 +93,6 @@ class CharactersScreenViewModel @Inject constructor(
                         isSearchBarActive = false,
                         searchHistory = searchHistory.toMutableList()
                             .apply { this.add(state.value.searchText) },
-                        searchText = "",
                     )
                 }
             }
@@ -201,7 +198,7 @@ class CharactersScreenViewModel @Inject constructor(
                     val selectedItemIndex = indexOfFirst { it.selected }
                     val selectedItem = find { it.selected }
 
-                    if(selectedItemIndex != 0) {
+                    if (selectedItemIndex != 0) {
                         this[selectedItemIndex] = selectedItem!!.copy(selected = false)
                         this[0] = this[0].copy(selected = true)
                     }
@@ -211,7 +208,7 @@ class CharactersScreenViewModel @Inject constructor(
                     val selectedItemIndex = indexOfFirst { it.selected }
                     val selectedItem = find { it.selected }
 
-                    if(selectedItemIndex != 0) {
+                    if (selectedItemIndex != 0) {
                         this[selectedItemIndex] = selectedItem!!.copy(selected = false)
                         this[0] = this[0].copy(selected = true)
                     }
@@ -221,7 +218,7 @@ class CharactersScreenViewModel @Inject constructor(
                     copy(
                         showBottomSheetDialog = false,
                         listFilterGender = genderCopyList,
-                        listFilterStatus = statusCopyList
+                        listFilterStatus = statusCopyList,
                     )
                 }
                 getAllCharacters()

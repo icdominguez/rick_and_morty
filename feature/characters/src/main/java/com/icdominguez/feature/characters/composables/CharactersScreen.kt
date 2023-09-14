@@ -1,14 +1,12 @@
 package com.icdominguez.feature.characters.composables
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
@@ -21,7 +19,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SettingsInputComponent
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,15 +35,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.icdominguez.core.model.Character
 import com.icdominguez.feature.characters.CharactersScreenViewModel
 import com.icdominguez.feature.characters.composables.gridview.CharactersGridView
 import com.icdominguez.feature.characters.composables.listview.CharactersListView
+import com.icdominguez.rickandmorty.core.designsystem.component.FullScreenLoading
+import com.icdominguez.rickandmorty.core.designsystem.component.NoDataFound
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,10 +62,6 @@ fun CharactersScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val coroutineScope = rememberCoroutineScope()
     val modalBottomSheetState = rememberModalBottomSheetState()
-
-    val configuration = LocalConfiguration.current
-
-    val widthInDp = configuration.screenWidthDp.dp
 
     Scaffold(
         modifier = Modifier
@@ -86,6 +81,12 @@ fun CharactersScreen(
                             contentDescription = "",
                         )
                     }
+                    IconButton(onClick = { uiEvent(CharactersScreenViewModel.Event.OnFilterButtonClicked) }) {
+                        Icon(
+                            imageVector = Icons.Default.SettingsInputComponent,
+                            contentDescription = "Button filter",
+                        )
+                    }
                 },
                 scrollBehavior = scrollBehavior,
             )
@@ -103,84 +104,60 @@ fun CharactersScreen(
                         .padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .widthIn(max = widthInDp * 0.75f),
-                    ) {
-                        DockedSearchBar(
-                            query = state.searchText,
-                            onQueryChange = {
-                                uiEvent(
-                                    CharactersScreenViewModel.Event.OnSearchTextChanged(
-                                        it,
-                                    ),
+                    DockedSearchBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        query = state.searchText,
+                        onQueryChange = {
+                            uiEvent(
+                                CharactersScreenViewModel.Event.OnSearchTextChanged(
+                                    it,
+                                ),
+                            )
+                        },
+                        onSearch = { uiEvent(CharactersScreenViewModel.Event.OnSearchClicked) },
+                        active = state.isSearchBarActive,
+                        onActiveChange = { uiEvent(CharactersScreenViewModel.Event.OnSearchBarActiveChange) },
+                        placeholder = {
+                            Text(text = "Search")
+                        },
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Default.Search, contentDescription = "")
+                        },
+                        trailingIcon = {
+                            if (state.isSearchBarActive) {
+                                Icon(
+                                    modifier = Modifier.clickable {
+                                        uiEvent(
+                                            CharactersScreenViewModel.Event.OnSearchBarClose,
+                                        )
+                                    },
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "",
                                 )
-                            },
-                            onSearch = { uiEvent(CharactersScreenViewModel.Event.OnSearchClicked) },
-                            active = state.isSearchBarActive,
-                            onActiveChange = { uiEvent(CharactersScreenViewModel.Event.OnSearchBarActiveChange) },
-                            placeholder = {
-                                Text(text = "Search")
-                            },
-                            leadingIcon = {
-                                Icon(imageVector = Icons.Default.Search, contentDescription = "")
-                            },
-                            trailingIcon = {
-                                if (state.isSearchBarActive) {
-                                    Icon(
-                                        modifier = Modifier.clickable {
+                            }
+                        },
+                    ) {
+                        LazyColumn {
+                            items(state.searchHistory) {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(all = 14.dp)
+                                        .clickable {
                                             uiEvent(
-                                                CharactersScreenViewModel.Event.OnSearchBarClose,
+                                                CharactersScreenViewModel.Event.OnHistoryItemClicked(
+                                                    it,
+                                                ),
                                             )
                                         },
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "",
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.padding(end = 10.dp),
+                                        imageVector = Icons.Default.History,
+                                        contentDescription = "History Icon",
                                     )
-                                }
-                            },
-                        ) {
-                            LazyColumn {
-                                items(state.searchHistory) {
-                                    Row(
-                                        modifier = Modifier
-                                            .padding(all = 14.dp)
-                                            .clickable {
-                                                uiEvent(
-                                                    CharactersScreenViewModel.Event.OnHistoryItemClicked(
-                                                        it,
-                                                    ),
-                                                )
-                                            },
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier.padding(end = 10.dp),
-                                            imageVector = Icons.Default.History,
-                                            contentDescription = "History Icon",
-                                        )
-                                        Text(text = it)
-                                    }
+                                    Text(text = it)
                                 }
                             }
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier
-                            .widthIn(max = widthInDp * 0.20f)
-                            .padding(start = 5.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Button(
-                            modifier = Modifier.padding(0.dp),
-                            onClick = {
-                                uiEvent(CharactersScreenViewModel.Event.OnFilterButtonClicked)
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.SettingsInputComponent,
-                                contentDescription = "Button filter",
-                            )
                         }
                     }
                 }
@@ -188,18 +165,30 @@ fun CharactersScreen(
                 val characterPagingItems: LazyPagingItems<Character> =
                     viewModel.charactersState.collectAsLazyPagingItems()
 
-                if (state.showColumn) {
-                    CharactersListView(
-                        items = characterPagingItems,
-                        listState = lazyListState,
-                        onCharacterClicked = { onCharacterClick(it) },
-                    )
-                } else {
-                    CharactersGridView(
-                        items = characterPagingItems,
-                        gridState = lazyGridState,
-                        onCharacterClicked = { onCharacterClick(it) },
-                    )
+                when (characterPagingItems.loadState.refresh) {
+                    is LoadState.Loading -> {
+                        FullScreenLoading()
+                    }
+
+                    is LoadState.Error -> {
+                        NoDataFound()
+                    }
+
+                    else -> {
+                        if (state.showColumn) {
+                            CharactersListView(
+                                items = characterPagingItems,
+                                listState = lazyListState,
+                                onCharacterClicked = { onCharacterClick(it) },
+                            )
+                        } else {
+                            CharactersGridView(
+                                items = characterPagingItems,
+                                gridState = lazyGridState,
+                                onCharacterClicked = { onCharacterClick(it) },
+                            )
+                        }
+                    }
                 }
             }
 
@@ -230,8 +219,20 @@ fun CharactersScreen(
                     onApplyClicked = { uiEvent(CharactersScreenViewModel.Event.OnBottomSheetDialogAccepted) },
                     filterStatusValues = state.listFilterStatus,
                     filterGenderValues = state.listFilterGender,
-                    onFilterStatusSelected = { uiEvent(CharactersScreenViewModel.Event.OnFilterStatusSelected(it)) },
-                    onFilterGenderSelected = { uiEvent(CharactersScreenViewModel.Event.OnFilterGenderSelected(it)) },
+                    onFilterStatusSelected = {
+                        uiEvent(
+                            CharactersScreenViewModel.Event.OnFilterStatusSelected(
+                                it,
+                            ),
+                        )
+                    },
+                    onFilterGenderSelected = {
+                        uiEvent(
+                            CharactersScreenViewModel.Event.OnFilterGenderSelected(
+                                it,
+                            ),
+                        )
+                    },
                     onResetFilterButtonClicked = { uiEvent(CharactersScreenViewModel.Event.OnResetFilterButtonClicked) },
                 )
             }
